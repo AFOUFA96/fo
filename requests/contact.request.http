@@ -1,0 +1,60 @@
+# GET http://localhost:5000/auth
+POST http://localhost:5000/auth/renew
+
+
+
+
+
+# GET http://localhost:5001/contact/15
+# POST http://localhost:5001/contact
+# DELETE http://localhost:5001/contact/1
+# POST http://localhost:5000/contact
+# Content-Type: application/json
+
+# [
+#     {
+#     "firstname":"firstname4",
+#     "lastname" : "firstname4",
+#     "email":"test4",
+#     "message":"blablaaaaa4"
+#     },
+#     {
+#     "firstname":"firstname5",
+#     "lastname" : "firstname5",
+#     "email":"test5",
+#     "message":"blablaaaaa5"
+#     }   
+# # ]
+# PUT http://localhost:5000/contact
+# Content-Type: application/json
+
+# {
+#     "firstname":"truc'",
+#     "lastname" : "truc",
+#     "email" : "truc@lastname4.fr",
+#     "message" : "aaaaa"
+# }
+
+# POST http://localhost:5000/contact
+# Content-Type: application/json
+
+# {
+#     "where": "email = 'afaf.aithamou96@gmail.com'"
+# }
+
+# DELETE http://localhost:5000/contact/2
+# POST http://localhost:5000/auth
+# Content-Type: application/json
+
+# {
+#     "email": "test@test.fr",
+#     "password": "test"
+# }
+
+# PUT http://localhost:5000/auth
+# Content-Type: application/json
+
+# {
+#     "email" : "test1@test.fr",
+#     "password":"truc'"
+# }
