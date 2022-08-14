@@ -33,7 +33,6 @@ class AuthController extends BaseController {
             //         `
             // <b>Confirmez votre inscription : </b>
             // <a href="http://localhost:3000/account/validation?t=${encodeURIComponent(token)}" target="_blank">Confirmer</a>
-            
             // `;
             //     await MailerService.sendMail({ to: params.email, subject: "Confirmer votre inscription", html });
                 result.status = true;
