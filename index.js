@@ -4,10 +4,14 @@ const app = express();
 
 const cors = require("cors");
 const corsOptions = {
-    origin : ["http://localhost:3000"]
+    origin : ["http://localhost:3000"],
+    credentials: true
 };
 app.use(cors(corsOptions));
 app.use(express.json()); 
+
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 const routers = require('./api/routers');
 for(const route in routers){

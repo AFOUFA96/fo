@@ -14,32 +14,31 @@ class AuthController extends BaseController {
     }
 
     login = async (params) => {
-        // bcrypt.genSalt(10, function (err, salt) {
-        //     if (err) {
-        //         throw err
-        //     } else {
-        //         bcrypt.hash("test", salt, function (err, hash) {
-        //             if (err) {
-        //                 throw err
-        //             } else {
-        //                 console.log(hash)
-        //                 //$2b$10$L.Iodja1nOMAqQ8DIsOSMuh.IBlKXVSuW5iQdFExoK8EcUYe5TdfW
-        //             }
-        //         })
-        //     }
-        // })
-
-        ///////
         const result = {
-            message: "",
             status: false
         }
         const user = await this.getUser(params.email);
         if (user) {
-            const isMatch = await bcrypt.compare(params.password, user.password);
+            const isMatch = await bcrypt.compare(params.password, appConfig.HASH_PREFIX + user.password);
             result.status = isMatch;
             if (isMatch) {
-                result.message = `Welcome ${params.email} !`;
+                result.email = params.email;
+                result.role = user.role;
+                const payload = { email: params.email, role: user.role };
+                const token = jwt.sign(payload, appConfig.JWT_SECRET, { expiresIn: '1d' });
+                result.token = token;
+
+            //     //SEND MAIL
+            //     const html =
+            //         `
+            // <b>Confirmez votre inscription : </b>
+            // <a href="http://localhost:3000/account/validation?t=${encodeURIComponent(token)}" target="_blank">Confirmer</a>
+            
+            // `;
+            //     await MailerService.sendMail({ to: params.email, subject: "Confirmer votre inscription", html });
+                result.status = true;
+                result.message = "Authentification réussie :D!";
+                return result;
             }
             else {
                 result.message = "mot de passe erroné!";
@@ -51,32 +50,7 @@ class AuthController extends BaseController {
         return result;
     }
     register = async (params) => {
-        // Créer le token (coté node avec jsonwebtoken)  en y stockant email et role et le renvoyer
-        // à l'appli React (dans la réponse {email, rôle, token, etc...) si 'lauthentification est ok.
-        // Coté React, récupérer le token est le stocker sous forme de cookie avec une expiration à 24h.
 
-        let result={};
-        const user = await this.getUser(params.email);
-        if(!user){
-            result.email = params.email;
-            result.role = "1";
-            const payload = {mail: params.email, role: 1};
-            const token = jwt.sign(payload, appConfig.JWT_SECRET, { expiresIn: '1d' });
-            result.token = token;
-            
-            //SEND MAIL
-            const html = 
-            `
-            <b>Confirmez votre inscription : </b>
-            <a href="http://localhost:3000/account/validation?t=${encodeURIComponent(token)}" target="_blank">Confirmer</a>
-            
-            `;
-            await MailerService.sendMail({to: params.email, subject:"Confirmer votre inscription", html});
-            result.status= true;
-            result.message = "vous allez recevoir un mail pour valider votre inscription!";
-            return result;
-        }
-        return false;
     }
     validate = async (req) => {
         return "post validate";
@@ -84,6 +58,34 @@ class AuthController extends BaseController {
     renew = async (req) => {
         return "post renew";
     }
+    check = async (req) => {
+        const auth = req.cookies.auth;
+        if (auth) {
+            const result = jwt.verify(auth, appConfig.JWT_SECRET);
+            if (result) {
+                return { status: true, role: result.role, email: result.email }
+            }
+        }
+        return { status: false, role: 0 }
+    }
 }
 
 module.exports = AuthController;
+
+// const password = "admin";
+// const saltRounds = 10;
+
+// bcrypt.genSalt(saltRounds, function (err, salt) {
+//     if (err) {
+//         throw err
+//     } else {
+//         bcrypt.hash(password, salt, function (err, hash) {
+//             if (err) {
+//                 throw err
+//             } else {
+//                 console.log(hash)
+//                 //$2b$10$L.Iodja1nOMAqQ8DIsOSMuh.IBlKXVSuW5iQdFExoK8EcUYe5TdfW
+//             }
+//         })
+//     }
+// })
