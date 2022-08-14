@@ -50,7 +50,6 @@ class AuthController extends BaseController {
         return result;
     }
     register = async (params) => {
-
     }
     validate = async (req) => {
         return "post validate";
